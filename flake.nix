@@ -45,7 +45,7 @@
       project = stdenv.mkDerivation rec {
         pname = name;
         # This needs to be updated
-        version = "1.7.15-SNAPSHOT";
+        version = "1.7.17-SNAPSHOT";
 
         src = root;
         buildInputs = with pkgs; [ maven makeWrapper ];
