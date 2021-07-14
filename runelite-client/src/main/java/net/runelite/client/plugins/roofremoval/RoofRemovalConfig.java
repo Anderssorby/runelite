@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Matthew C <Chapman.L.Matthew@gmail.com>
+ * Copyright (c) 2021, Hydrox6 <ikada@protonmail.ch>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,48 +22,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.inventoryviewer;
+package net.runelite.client.plugins.roofremoval;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.Keybind;
 
-@ConfigGroup(InventoryViewerConfig.GROUP)
-public interface InventoryViewerConfig extends Config
+@ConfigGroup(RoofRemovalConfig.CONFIG_GROUP)
+public interface RoofRemovalConfig extends Config
 {
-	String GROUP = "inventoryViewer";
+	String CONFIG_GROUP = "roofremoval";
 
 	@ConfigItem(
-		keyName = "toggleKeybind",
-		name = "Toggle Overlay",
-		description = "Binds a key (combination) to toggle the overlay.",
-		position = 0
+		keyName = "removePosition",
+		name = "Player's position",
+		description = "Remove roofs above the player's position"
 	)
-	default Keybind toggleKeybind()
+	default boolean removePosition()
 	{
-		return Keybind.NOT_SET;
+		return true;
 	}
 
 	@ConfigItem(
-		keyName = "hiddenDefault",
-		name = "Hidden by default",
-		description = "Whether or not the overlay is hidden by default.",
-		position = 1
+		keyName = "removeHovered",
+		name = "Hovered tile",
+		description = "Remove roofs above the hovered tile"
 	)
-	default boolean hiddenDefault()
+	default boolean removeHovered()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
-		keyName = "hideIfInventoryActive",
-		name = "Hidden on inventory tab",
-		description = "Whether or not the overlay is hidden when the inventory tab is open.",
-		position = 2
+		keyName = "removeDestination",
+		name = "Destination tile",
+		description = "Remove roofs above the destination tile"
 	)
-	default boolean hideIfInventoryActive()
+	default boolean removeDestination()
 	{
-		return false;
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "removeBetween",
+		name = "Between camera & player",
+		description = "Remove roofs between the camera and the player at low camera angles"
+	)
+	default boolean removeBetween()
+	{
+		return true;
 	}
 }
