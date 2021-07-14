@@ -40,13 +40,15 @@
         # replace this with the correct SHA256
         outputHash = "sha256-37PV2zDuE3K0pNCmqsqWgpJX1z3LWjwJYe52e1q7euU=";
       };
+      jarname = "client";
+      jre = pkgs.jre;
       project = stdenv.mkDerivation rec {
         pname = name;
         # This needs to be updated
         version = "1.7.15-SNAPSHOT";
 
         src = root;
-        buildInputs = with pkgs; [ maven ];
+        buildInputs = with pkgs; [ maven makeWrapper ];
 
         buildPhase = ''
           echo "Using repository ${repository}"
@@ -54,7 +56,17 @@
         '';
 
         installPhase = ''
-          install -Dm644 runelite-client/target/client-${version}.jar $out/share/java
+          mkdir -p $out/bin
+
+          # create a symbolic link for the repository directory
+          ln -s ${repository} $out/repository
+          
+          install -Dm644 runelite-client/target/${jarname}-${version}.jar $out/share/java/${jarname}-${version}.jar
+
+          # create a wrapper that will automatically set the classpath
+          # this should be the paths from the dependency derivation
+          makeWrapper ${jre}/bin/java $out/bin/${pname} \
+            --add-flags "-jar $out/share/java/${jarname}-${version}.jar"
         '';
       };
       buildInputs = with pkgs; [
@@ -65,6 +77,10 @@
       packages.${name} = project;
 
       defaultPackage = self.packages.${system}.${name};
+
+      apps.${name} = flake-utils.mkApp {
+        drv = project;
+      };
 
       # `nix develop`
       devShell = pkgs.mkShell {
